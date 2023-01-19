@@ -1,4 +1,5 @@
 import Notiflix from 'notiflix';
+import axios from 'axios';
 
 const API_KEY = '32827744-052546b65c11463fcf8d3310a';
 const BASE_URL = 'https://pixabay.com/api/';
@@ -9,31 +10,43 @@ export default class APIService {
     this.page = 1;
   }
 
-  fetchPhotos() {
-    return fetch(
-      `${BASE_URL}?key=${API_KEY}&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&per_page=40&page=${this.page}`
-    )
-      .then(r => {
-        if (!r.ok) {
-          throw new Error(r.statusText);
-        }
-        return r.json();
-      })
-      .then(data => {
-        // if (!hits.length) {
-        //   Notiflix.Notify.failure(
-        //     'Sorry, there are no images matching your search query. Please try again.'
-        //   );
-        // } else {
-        //   this.incrementPage();
-        //   Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
-        // }
-        return data;
-      })
-      .catch(err => {
-        return console.error(err);
-      });
+  // fetchPhotos() {
+  //   return fetch(
+  //     `${BASE_URL}?key=${API_KEY}&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&per_page=40&page=${this.page}`
+  //   )
+  //     .then(r => {
+  //       if (!r.ok) {
+  //         throw new Error(r.statusText);
+  //       }
+  //       return r.json();
+  //     })
+  //     .then(data => {
+  //       // if (!hits.length) {
+  //       //   Notiflix.Notify.failure(
+  //       //     'Sorry, there are no images matching your search query. Please try again.'
+  //       //   );
+  //       // } else {
+  //       //   this.incrementPage();
+  //       //   Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
+  //       // }
+  //       return data;
+  //     })
+  //     .catch(err => {
+  //       return console.error(err);
+  //     });
+  // }
+
+  async fetchPhotos() {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}?key=${API_KEY}&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&per_page=40&page=${this.page}`
+      );
+      return response.data;
+    } catch (error) {
+      throw new Error(error);
+    }
   }
+
   incrementPage() {
     this.page += 1;
   }

@@ -24,25 +24,40 @@ const observer = new IntersectionObserver(onInfinityLoad, options);
 
 refs.form.addEventListener('submit', onSearch);
 refs.initialImg.style.visibility = 'visible';
-function onSearch(e) {
+
+async function onSearch(e) {
   e.preventDefault();
   aPIService.query = e.currentTarget.elements.searchQuery.value.trim();
   aPIService.resetPage();
   refs.initialImg.style.visibility = 'hidden';
-  aPIService.fetchPhotos().then(createMarkup);
-  observer.observe(refs.guard);
+
+  try {
+    const data = await aPIService.fetchPhotos();
+    console.log({ data });
+    createMarkup(data);
+    if (data.hits.length) {
+      Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
+    }
+    observer.observe(refs.guard);
+  } catch (error) {
+    Notiflix.Notify.failure(
+      '1 Sorry, there are no images matching your search query. Please try again.'
+    );
+  }
 }
 function check(hits, totalHits) {
   if (hits.length === 0) {
-    observer.unobserve(refs.guard);
-  }
-  if (!hits.length) {
     Notiflix.Notify.failure(
-      'Sorry, there are no images matching your search query. Please try again.'
+      ' 2 Sorry, there are no images matching your search query. Please try again.'
     );
   } else {
-    aPIService.incrementPage();
-    Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
+    observer.observe(refs.guard);
+  }
+  if (hits.length && totalHits === refs.galleryContainer.childElementCount) {
+    observer.unobserve(refs.guard);
+    Notiflix.Notify.info(
+      "We're sorry, but you've reached the end of search results."
+    );
   }
 }
 function createMarkup(data) {
@@ -70,7 +85,7 @@ function createMarkup(data) {
   if (aPIService.page === 1) {
     refs.galleryContainer.innerHTML = markup.join('');
     instance.refresh();
-    check(data.hits, data.totalHits);
+    // check(data.hits, data.totalHits);
     return;
   }
   refs.galleryContainer.insertAdjacentHTML('beforeend', markup.join(''));
@@ -79,9 +94,17 @@ function createMarkup(data) {
 }
 
 function onInfinityLoad(entries) {
-  entries.forEach(entry => {
+  entries.forEach(async entry => {
     if (entry.isIntersecting) {
-      aPIService.fetchPhotos().then(createMarkup);
+      try {
+        aPIService.incrementPage();
+        const data = await aPIService.fetchPhotos();
+        createMarkup(data);
+      } catch (error) {
+        Notiflix.Notify.failure(
+          ' 3 Sorry, there are no images matching your search query. Please try again.'
+        );
+      }
     }
   });
 }
