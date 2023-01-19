@@ -19,16 +19,16 @@ export default class APIService {
         }
         return r.json();
       })
-      .then(({ hits, totalHits }) => {
-        if (!hits.length) {
-          Notiflix.Notify.failure(
-            'Sorry, there are no images matching your search query. Please try again.'
-          );
-        } else {
-          this.incrementPage();
-          Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
-        }
-        return hits;
+      .then(data => {
+        // if (!hits.length) {
+        //   Notiflix.Notify.failure(
+        //     'Sorry, there are no images matching your search query. Please try again.'
+        //   );
+        // } else {
+        //   this.incrementPage();
+        //   Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
+        // }
+        return data;
       })
       .catch(err => {
         return console.error(err);

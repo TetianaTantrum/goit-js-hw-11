@@ -7,17 +7,25 @@
     <link rel="stylesheet" href="./sass/index.scss" />
   </head>
   <body>
-    <form class="search-form" id="search-form">
-      <input
-        type="text"
-        name="searchQuery"
-        autocomplete="off"
-        placeholder="Search images..."
+    <div class="container">
+      <form class="search-form container" id="search-form">
+        <input
+          type="text"
+          name="searchQuery"
+          class="submit__input"
+          autocomplete="off"
+          placeholder="Search images..."
+        />
+        <button type="submit" class="submit__btn">Search</button>
+      </form>
+      <img
+        src="https://st.depositphotos.com/1000865/2102/i/600/depositphotos_21025657-stock-photo-turkey-travel-photography-on-clothespins.jpg"
+        alt="image"
+        class="initial-image"
       />
-      <button type="submit">Search</button>
-    </form>
-    <div class="gallery"></div>
-    <div class="js-guard"></div>
+      <div class="gallery"></div>
+      <div class="js-guard"></div>
+    </div>
     <script src="index.js" type="module"></script>
   </body>
 </html>
