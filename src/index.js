@@ -41,14 +41,14 @@ async function onSearch(e) {
     observer.observe(refs.guard);
   } catch (error) {
     Notiflix.Notify.failure(
-      'Sorry, there are no images matching your search query. Please try again.'
+      '1 Sorry, there are no images matching your search query. Please try again.'
     );
   }
 }
 function check(hits, totalHits) {
   if (hits.length === 0) {
     Notiflix.Notify.failure(
-      'Sorry, there are no images matching your search query. Please try again.'
+      '2 Sorry, there are no images matching your search query. Please try again.'
     );
   } else {
     observer.observe(refs.guard);
@@ -85,7 +85,6 @@ function createMarkup(data) {
   if (aPIService.page === 1) {
     refs.galleryContainer.innerHTML = markup.join('');
     instance.refresh();
-    // check(data.hits, data.totalHits);
     return;
   }
   refs.galleryContainer.insertAdjacentHTML('beforeend', markup.join(''));
@@ -101,16 +100,16 @@ function onInfinityLoad(entries) {
         const data = await aPIService.fetchPhotos();
         createMarkup(data);
       } catch (error) {
-        Notiflix.Notify.failure(
-          'Sorry, there are no images matching your search query. Please try again.'
-        );
+        if (!observer.observe(refs.guard)) {
+          Notiflix.Notify.info(
+            "We're sorry, but you've reached the end of search results."
+          );
+        } else {
+          Notiflix.Notify.failure(
+            '3 Sorry, there are no images matching your search query. Please try again.'
+          );
+        }
       }
     }
   });
 }
-// function onClickOpen(e) {
-//   e.preventDefault();
-//   if (e.target.nodeName !== 'IMG') {
-//     return;
-//   }
-// }
