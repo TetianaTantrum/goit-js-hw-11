@@ -41,14 +41,14 @@ async function onSearch(e) {
     observer.observe(refs.guard);
   } catch (error) {
     Notiflix.Notify.failure(
-      '1 Sorry, there are no images matching your search query. Please try again.'
+      'Sorry, there are no images matching your search query. Please try again.'
     );
   }
 }
 function check(hits, totalHits) {
   if (hits.length === 0) {
     Notiflix.Notify.failure(
-      ' 2 Sorry, there are no images matching your search query. Please try again.'
+      'Sorry, there are no images matching your search query. Please try again.'
     );
   } else {
     observer.observe(refs.guard);
@@ -102,7 +102,7 @@ function onInfinityLoad(entries) {
         createMarkup(data);
       } catch (error) {
         Notiflix.Notify.failure(
-          ' 3 Sorry, there are no images matching your search query. Please try again.'
+          'Sorry, there are no images matching your search query. Please try again.'
         );
       }
     }
